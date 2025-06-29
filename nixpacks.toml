@@ -1,0 +1,14 @@
+[phases.setup]
+nixPkgs = ["nodejs", "bun"]
+
+[phases.install]
+cmds = ["bun install"]
+
+[phases.build]
+cmds = ["bun run build"]
+
+[start]
+cmd = "bun preview --port $PORT --host 0.0.0.0"
+
+[variables]
+NODE_ENV = "production" 
