@@ -1,6 +1,7 @@
 export interface GameState {
   currentChallenge: string | null
-  currentLevel: 'beginner' | 'intermediate' | 'advanced'
+  currentLevel: 'easy' | 'medium' | 'hard'
+  score: number
   streak: number
   sessionTimeLeft: number
   isPaused: boolean
@@ -18,7 +19,7 @@ export interface MathQuestion {
   answer: number
   options?: number[]
   type: 'multiple-choice' | 'input'
-  difficulty: 'beginner' | 'intermediate' | 'advanced'
+  difficulty: 'easy' | 'medium' | 'hard'
   category: string
   timeLimit?: number
 }
@@ -31,7 +32,7 @@ export class GameStateManager {
   constructor() {
     this.state = {
       currentChallenge: null,
-      currentLevel: 'beginner',
+      currentLevel: 'easy',
       score: 0,
       streak: 0,
       sessionTimeLeft: 0,
@@ -62,7 +63,7 @@ export class GameStateManager {
     })
   }
 
-  startChallenge(challengeType: string, level: 'beginner' | 'intermediate' | 'advanced'): void {
+  startChallenge(challengeType: string, level: 'easy' | 'medium' | 'hard'): void {
     this.setState({
       currentChallenge: challengeType,
       currentLevel: level,
@@ -153,8 +154,8 @@ export class GameStateManager {
     this.updateStreak(correct)
     
     if (correct) {
-      const basePoints = this.state.currentLevel === 'advanced' ? 15 : 
-                        this.state.currentLevel === 'intermediate' ? 10 : 5
+      const basePoints = this.state.currentLevel === 'hard' ? 15 :
+        this.state.currentLevel === 'medium' ? 10 : 5
       const streakBonus = Math.min(this.state.streak, 10) * 2
       this.updateScore(basePoints + streakBonus)
     }

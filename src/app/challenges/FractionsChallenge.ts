@@ -2,7 +2,7 @@ import type { MathQuestion } from '../core/GameStateManager'
 import type { MathChallengeGenerator } from './ChallengeManager'
 
 export class FractionsChallenge implements MathChallengeGenerator {
-  generateQuestion(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
+  generateQuestion(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     const operations = ['add', 'subtract', 'multiply', 'divide', 'simplify', 'compare']
     const operation = operations[Math.floor(Math.random() * operations.length)]
     
@@ -24,10 +24,10 @@ export class FractionsChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateAddition(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
+  private generateAddition(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     let num1: number, den1: number, num2: number, den2: number
     
-    if (level === 'beginner') {
+    if (level === 'easy') {
       // Same denominators
       den1 = den2 = Math.floor(Math.random() * 8) + 2
       num1 = Math.floor(Math.random() * den1) + 1
@@ -61,10 +61,10 @@ export class FractionsChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateSubtraction(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
+  private generateSubtraction(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     let num1: number, den1: number, num2: number, den2: number
     
-    if (level === 'beginner') {
+    if (level === 'easy') {
       den1 = den2 = Math.floor(Math.random() * 8) + 2
       num1 = Math.floor(Math.random() * den1) + 1
       num2 = Math.floor(Math.random() * num1) + 1 // Ensure positive result
@@ -100,8 +100,8 @@ export class FractionsChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateMultiplication(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
-    const maxDen = level === 'beginner' ? 6 : level === 'intermediate' ? 10 : 12
+  private generateMultiplication(level: 'easy' | 'medium' | 'hard'): MathQuestion {
+    const maxDen = level === 'easy' ? 6 : level === 'medium' ? 10 : 12
     
     const den1 = Math.floor(Math.random() * maxDen) + 2
     const den2 = Math.floor(Math.random() * maxDen) + 2
@@ -127,8 +127,8 @@ export class FractionsChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateDivision(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
-    const maxDen = level === 'beginner' ? 6 : level === 'intermediate' ? 10 : 12
+  private generateDivision(level: 'easy' | 'medium' | 'hard'): MathQuestion {
+    const maxDen = level === 'easy' ? 6 : level === 'medium' ? 10 : 12
     
     const den1 = Math.floor(Math.random() * maxDen) + 2
     const den2 = Math.floor(Math.random() * maxDen) + 2
@@ -155,8 +155,8 @@ export class FractionsChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateSimplification(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
-    const maxBase = level === 'beginner' ? 12 : level === 'intermediate' ? 20 : 30
+  private generateSimplification(level: 'easy' | 'medium' | 'hard'): MathQuestion {
+    const maxBase = level === 'easy' ? 12 : level === 'medium' ? 20 : 30
     
     // Create a fraction that can be simplified
     const gcdBase = Math.floor(Math.random() * 6) + 2
@@ -178,7 +178,7 @@ export class FractionsChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateComparison(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
+  private generateComparison(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     const den1 = Math.floor(Math.random() * 8) + 2
     const den2 = Math.floor(Math.random() * 8) + 2
     const num1 = Math.floor(Math.random() * den1) + 1
@@ -207,11 +207,11 @@ export class FractionsChallenge implements MathChallengeGenerator {
     return Math.abs(a * b) / this.gcd(a, b)
   }
   
-  getTimeLimit(level: 'beginner' | 'intermediate' | 'advanced'): number {
+  getTimeLimit(level: 'easy' | 'medium' | 'hard'): number {
     switch (level) {
-      case 'beginner': return 20
-      case 'intermediate': return 15
-      case 'advanced': return 10
+      case 'easy': return 20
+      case 'medium': return 15
+      case 'hard': return 10
       default: return 20
     }
   }

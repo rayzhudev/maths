@@ -2,7 +2,7 @@ import type { MathQuestion } from '../core/GameStateManager'
 import type { MathChallengeGenerator } from './ChallengeManager'
 
 export class PercentageChallenge implements MathChallengeGenerator {
-  generateQuestion(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
+  generateQuestion(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     const operations = ['basic-percent', 'percent-of', 'find-total', 'percent-change', 'discount', 'tip']
     const operation = operations[Math.floor(Math.random() * operations.length)]
     
@@ -24,11 +24,11 @@ export class PercentageChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateBasicPercent(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
+  private generateBasicPercent(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     const numerator = Math.floor(Math.random() * 100) + 1
-    const denominator = level === 'beginner' ? 100 : 
-                       level === 'intermediate' ? Math.floor(Math.random() * 200) + 100 :
-                       Math.floor(Math.random() * 500) + 100
+    const denominator = level === 'easy' ? 100 :
+                       level === 'medium' ? Math.floor(Math.random() * 200) + 100 :
+                       Math.floor(Math.random() * 500) + 200
     
     const answer = parseFloat(((numerator / denominator) * 100).toFixed(2))
     
@@ -42,13 +42,13 @@ export class PercentageChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generatePercentOf(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
-    const percent = level === 'beginner' ? [10, 20, 25, 50, 75][Math.floor(Math.random() * 5)] :
-                   level === 'intermediate' ? Math.floor(Math.random() * 50) + 10 :
-                   Math.floor(Math.random() * 95) + 5
+  private generatePercentOf(level: 'easy' | 'medium' | 'hard'): MathQuestion {
+    const percent = level === 'easy' ? [10, 20, 25, 50, 75][Math.floor(Math.random() * 5)] :
+                   level === 'medium' ? Math.floor(Math.random() * 50) + 10 :
+                   Math.floor(Math.random() * 80) + 10
     
-    const number = level === 'beginner' ? Math.floor(Math.random() * 100) + 10 :
-                  level === 'intermediate' ? Math.floor(Math.random() * 500) + 50 :
+    const number = level === 'easy' ? Math.floor(Math.random() * 100) + 10 :
+                  level === 'medium' ? Math.floor(Math.random() * 500) + 50 :
                   Math.floor(Math.random() * 1000) + 100
     
     const answer = parseFloat(((percent / 100) * number).toFixed(2))
@@ -63,13 +63,13 @@ export class PercentageChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateFindTotal(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
-    const percent = level === 'beginner' ? [10, 20, 25, 50][Math.floor(Math.random() * 4)] :
-                   level === 'intermediate' ? Math.floor(Math.random() * 40) + 10 :
-                   Math.floor(Math.random() * 80) + 10
+  private generateFindTotal(level: 'easy' | 'medium' | 'hard'): MathQuestion {
+    const percent = level === 'easy' ? [10, 20, 25, 50][Math.floor(Math.random() * 4)] :
+                   level === 'medium' ? Math.floor(Math.random() * 40) + 10 :
+                   Math.floor(Math.random() * 60) + 20
     
-    const partValue = level === 'beginner' ? Math.floor(Math.random() * 50) + 10 :
-                     level === 'intermediate' ? Math.floor(Math.random() * 200) + 50 :
+    const partValue = level === 'easy' ? Math.floor(Math.random() * 50) + 10 :
+                     level === 'medium' ? Math.floor(Math.random() * 200) + 50 :
                      Math.floor(Math.random() * 500) + 100
     
     const answer = parseFloat((partValue / (percent / 100)).toFixed(2))
@@ -84,14 +84,14 @@ export class PercentageChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generatePercentChange(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
-    const originalValue = level === 'beginner' ? Math.floor(Math.random() * 100) + 20 :
-                         level === 'intermediate' ? Math.floor(Math.random() * 500) + 100 :
+  private generatePercentChange(level: 'easy' | 'medium' | 'hard'): MathQuestion {
+    const originalValue = level === 'easy' ? Math.floor(Math.random() * 100) + 20 :
+                         level === 'medium' ? Math.floor(Math.random() * 500) + 100 :
                          Math.floor(Math.random() * 1000) + 200
     
-    const changePercent = level === 'beginner' ? Math.floor(Math.random() * 50) + 10 :
-                         level === 'intermediate' ? Math.floor(Math.random() * 100) + 10 :
-                         Math.floor(Math.random() * 200) + 20
+    const changePercent = level === 'easy' ? Math.floor(Math.random() * 50) + 10 :
+                         level === 'medium' ? Math.floor(Math.random() * 100) + 10 :
+                         Math.floor(Math.random() * 200) + 50
     
     const isIncrease = Math.random() < 0.5
     const multiplier = isIncrease ? (1 + changePercent / 100) : (1 - changePercent / 100)
@@ -110,14 +110,14 @@ export class PercentageChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateDiscount(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
-    const originalPrice = level === 'beginner' ? Math.floor(Math.random() * 100) + 20 :
-                         level === 'intermediate' ? Math.floor(Math.random() * 500) + 50 :
+  private generateDiscount(level: 'easy' | 'medium' | 'hard'): MathQuestion {
+    const originalPrice = level === 'easy' ? Math.floor(Math.random() * 100) + 20 :
+                         level === 'medium' ? Math.floor(Math.random() * 500) + 50 :
                          Math.floor(Math.random() * 1000) + 100
     
-    const discountPercent = level === 'beginner' ? [10, 15, 20, 25, 30][Math.floor(Math.random() * 5)] :
-                           level === 'intermediate' ? Math.floor(Math.random() * 40) + 10 :
-                           Math.floor(Math.random() * 60) + 10
+    const discountPercent = level === 'easy' ? [10, 15, 20, 25, 30][Math.floor(Math.random() * 5)] :
+                           level === 'medium' ? Math.floor(Math.random() * 40) + 10 :
+                           Math.floor(Math.random() * 60) + 20
     
     const discountAmount = (discountPercent / 100) * originalPrice
     const finalPrice = originalPrice - discountAmount
@@ -145,14 +145,14 @@ export class PercentageChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateTip(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
-    const billAmount = level === 'beginner' ? Math.floor(Math.random() * 50) + 20 :
-                      level === 'intermediate' ? Math.floor(Math.random() * 100) + 30 :
+  private generateTip(level: 'easy' | 'medium' | 'hard'): MathQuestion {
+    const billAmount = level === 'easy' ? Math.floor(Math.random() * 50) + 20 :
+                      level === 'medium' ? Math.floor(Math.random() * 100) + 30 :
                       Math.floor(Math.random() * 200) + 50
     
-    const tipPercent = level === 'beginner' ? [15, 18, 20][Math.floor(Math.random() * 3)] :
-                      level === 'intermediate' ? [12, 15, 18, 20, 22][Math.floor(Math.random() * 5)] :
-                      Math.floor(Math.random() * 10) + 15
+    const tipPercent = level === 'easy' ? [15, 18, 20][Math.floor(Math.random() * 3)] :
+                      level === 'medium' ? [12, 15, 18, 20, 22][Math.floor(Math.random() * 5)] :
+                      Math.floor(Math.random() * 15) + 10
     
     const tipAmount = (tipPercent / 100) * billAmount
     const totalAmount = billAmount + tipAmount
@@ -180,11 +180,11 @@ export class PercentageChallenge implements MathChallengeGenerator {
     }
   }
   
-  getTimeLimit(level: 'beginner' | 'intermediate' | 'advanced'): number {
+  getTimeLimit(level: 'easy' | 'medium' | 'hard'): number {
     switch (level) {
-      case 'beginner': return 25
-      case 'intermediate': return 20
-      case 'advanced': return 15
+      case 'easy': return 25
+      case 'medium': return 20
+      case 'hard': return 15
       default: return 25
     }
   }

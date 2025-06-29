@@ -18,8 +18,8 @@ export interface ChallengeType {
 }
 
 export interface MathChallengeGenerator {
-  generateQuestion(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion
-  getTimeLimit(level: 'beginner' | 'intermediate' | 'advanced'): number
+  generateQuestion(level: 'easy' | 'medium' | 'hard'): MathQuestion
+  getTimeLimit(level: 'easy' | 'medium' | 'hard'): number
   validateAnswer(question: MathQuestion, userAnswer: string): boolean
 }
 
@@ -99,7 +99,7 @@ export class ChallengeManager {
     return this.challenges.get(id) || null
   }
 
-  startChallenge(challengeId: string, level: 'beginner' | 'intermediate' | 'advanced'): boolean {
+  startChallenge(challengeId: string, level: 'easy' | 'medium' | 'hard'): boolean {
     const challenge = this.challenges.get(challengeId)
     if (!challenge) {
       return false
@@ -178,34 +178,34 @@ export class ChallengeManager {
     this.currentGenerator = null
   }
 
-  getDifficultyDescription(level: 'beginner' | 'intermediate' | 'advanced'): string {
+  getDifficultyDescription(level: 'easy' | 'medium' | 'hard'): string {
     switch (level) {
-      case 'beginner':
-        return 'Simple operations with small numbers'
-      case 'intermediate':
-        return 'Multi-step problems with larger numbers'
-      case 'advanced':
-        return 'Complex calculations under time pressure'
+      case 'easy':
+        return 'Perfect for beginners and warming up'
+      case 'medium':
+        return 'Moderate difficulty with more complex problems'
+      case 'hard':
+        return 'Challenging problems for advanced practice'
       default:
         return ''
     }
   }
 
-  getRecommendedLevel(challengeId: string): 'beginner' | 'intermediate' | 'advanced' {
-    const stats = this.progressTracker.getChallengeStats(challengeId, 'beginner')
+  getRecommendedLevel(challengeId: string): 'easy' | 'medium' | 'hard' {
+    const stats = this.progressTracker.getChallengeStats(challengeId, 'easy')
     
     if (!stats || stats.timesPlayed < 5) {
-      return 'beginner'
+      return 'easy'
     }
     
     if (stats.bestAccuracy >= 80 && stats.timesPlayed >= 10) {
-      const intermediateStats = this.progressTracker.getChallengeStats(challengeId, 'intermediate')
-      if (intermediateStats && intermediateStats.bestAccuracy >= 75) {
-        return 'advanced'
+      const mediumStats = this.progressTracker.getChallengeStats(challengeId, 'medium')
+      if (mediumStats && mediumStats.bestAccuracy >= 75) {
+        return 'hard'
       }
-      return 'intermediate'
+      return 'medium'
     }
     
-    return 'beginner'
+    return 'easy'
   }
 } 

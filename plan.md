@@ -23,7 +23,7 @@
 - ✅ **GeometryChallenge**: Area, perimeter, shape calculations
 
 ### Difficulty System
-- ✅ **Three Levels**: Beginner, Intermediate, Advanced for each challenge
+- ✅ **Three Levels**: Easy, Medium, Hard for each challenge
 - ✅ **Adaptive Scaling**: Different number ranges and complexity per level
 - ✅ **Time Limits**: Variable time constraints based on difficulty
 - ✅ **Smart Recommendations**: Progress-based difficulty suggestions
@@ -31,7 +31,7 @@
 ### User Interface & Experience
 - ✅ **New Home Page Design**: Clean, simple layout with VS Code-style sidebar
 - ✅ **Left Sidebar**: Challenge selection with clickable buttons for each math type
-- ✅ **Global Difficulty Selector**: Bottom-left difficulty setting (Beginner default)
+- ✅ **Global Difficulty Selector**: Bottom-left difficulty setting (Easy default)
 - ✅ **Input-Only Challenges**: All challenges require keyboard input (no multiple choice)
 - ✅ **Global Keyboard Input**: Type numbers anywhere during games - no need to click input field
 - ✅ **Seamless Number Entry**: Auto-focus and character insertion from any cursor position
@@ -110,7 +110,7 @@
 **Total Math Challenges**: 6 types × 3 difficulty levels = 18 unique challenge configurations
 **User Interface**: Modern sidebar layout with instant game start
 **Input Method**: Keyboard-only (Enter/Space to submit)
-**Default Difficulty**: Beginner (easily changeable)
+**Default Difficulty**: Easy (easily changeable)
 **Performance**: Optimized for zero lag, smooth 60fps experience
 **Deployment**: NixPack configured for automatic Coolify deployment
 

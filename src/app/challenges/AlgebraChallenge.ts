@@ -2,7 +2,7 @@ import type { MathQuestion } from '../core/GameStateManager'
 import type { MathChallengeGenerator } from './ChallengeManager'
 
 export class AlgebraChallenge implements MathChallengeGenerator {
-  generateQuestion(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
+  generateQuestion(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     const operations = ['solve-linear', 'evaluate', 'simplify', 'word-problem']
     const operation = operations[Math.floor(Math.random() * operations.length)]
     
@@ -20,10 +20,10 @@ export class AlgebraChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateLinearEquation(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
+  private generateLinearEquation(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     let answer: number, equation: string
     
-    if (level === 'beginner') {
+    if (level === 'easy') {
       // Simple equations: x + a = b or x - a = b
       answer = Math.floor(Math.random() * 20) + 1
       const a = Math.floor(Math.random() * 20) + 1
@@ -36,7 +36,7 @@ export class AlgebraChallenge implements MathChallengeGenerator {
         const b = answer + a
         equation = `x - ${a} = ${b}`
       }
-    } else if (level === 'intermediate') {
+    } else if (level === 'medium') {
       // ax + b = c or ax - b = c
       answer = Math.floor(Math.random() * 15) + 1
       const a = Math.floor(Math.random() * 5) + 2
@@ -71,11 +71,11 @@ export class AlgebraChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateEvaluation(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
+  private generateEvaluation(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     const x = Math.floor(Math.random() * 10) + 1
     let expression: string, answer: number
     
-    if (level === 'beginner') {
+    if (level === 'easy') {
       // Simple: 2x + 3, x - 5, etc.
       const a = Math.floor(Math.random() * 5) + 1
       const b = Math.floor(Math.random() * 10) + 1
@@ -88,7 +88,7 @@ export class AlgebraChallenge implements MathChallengeGenerator {
         expression = `${a}x - ${b}`
         answer = a * x - b
       }
-    } else if (level === 'intermediate') {
+    } else if (level === 'medium') {
       // Quadratic: ax² + bx + c
       const a = Math.floor(Math.random() * 3) + 1
       const b = Math.floor(Math.random() * 5) + 1
@@ -118,8 +118,8 @@ export class AlgebraChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateSimplification(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
-    if (level === 'beginner') {
+  private generateSimplification(level: 'easy' | 'medium' | 'hard'): MathQuestion {
+    if (level === 'easy') {
       // Combine like terms: 3x + 2x = ?
       const a = Math.floor(Math.random() * 5) + 1
       const b = Math.floor(Math.random() * 5) + 1
@@ -133,7 +133,7 @@ export class AlgebraChallenge implements MathChallengeGenerator {
         difficulty: level,
         category: 'algebra'
       }
-    } else if (level === 'intermediate') {
+    } else if (level === 'medium') {
       // Mixed terms: ax + b + cx + d
       const a = Math.floor(Math.random() * 5) + 1
       const b = Math.floor(Math.random() * 10) + 1
@@ -171,7 +171,7 @@ export class AlgebraChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateWordProblem(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
+  private generateWordProblem(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     const problems = this.getWordProblems(level)
     const problem = problems[Math.floor(Math.random() * problems.length)]
     
@@ -185,8 +185,8 @@ export class AlgebraChallenge implements MathChallengeGenerator {
     }
   }
   
-  private getWordProblems(level: 'beginner' | 'intermediate' | 'advanced') {
-    if (level === 'beginner') {
+  private getWordProblems(level: 'easy' | 'medium' | 'hard') {
+    if (level === 'easy') {
       const x = Math.floor(Math.random() * 15) + 5
       return [
         {
@@ -202,7 +202,7 @@ export class AlgebraChallenge implements MathChallengeGenerator {
           answer: x
         }
       ]
-    } else if (level === 'intermediate') {
+    } else if (level === 'medium') {
       const x = Math.floor(Math.random() * 10) + 5
       return [
         {
@@ -237,11 +237,11 @@ export class AlgebraChallenge implements MathChallengeGenerator {
     }
   }
   
-  getTimeLimit(level: 'beginner' | 'intermediate' | 'advanced'): number {
+  getTimeLimit(level: 'easy' | 'medium' | 'hard'): number {
     switch (level) {
-      case 'beginner': return 25
-      case 'intermediate': return 20
-      case 'advanced': return 15
+      case 'easy': return 30
+      case 'medium': return 25
+      case 'hard': return 20
       default: return 25
     }
   }

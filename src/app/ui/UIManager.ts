@@ -6,7 +6,7 @@ import type { GameState, MathQuestion } from '../core/GameStateManager'
 
 export class UIManager {
   private currentScreen: 'home' | 'game' | 'results' | 'settings' | 'achievements' = 'home'
-  private currentDifficulty: 'beginner' | 'intermediate' | 'advanced' = 'beginner'
+  private currentDifficulty: 'easy' | 'medium' | 'hard' = 'easy'
   private currentQuestionId: string | null = null
   private resultsKeyListener: ((e: KeyboardEvent) => void) | null = null
   private homeKeyListener: ((e: KeyboardEvent) => void) | null = null
@@ -54,10 +54,9 @@ export class UIManager {
           </div>
           
           <div class="difficulty-selector-bottom">
-            <label>Difficulty:</label>
             <button id="difficulty-btn" class="difficulty-btn current-difficulty">
               <span class="difficulty-icon">🌱</span>
-              <span class="difficulty-text">Beginner</span>
+              <span class="difficulty-text">Easy</span>
             </button>
           </div>
         </div>
@@ -114,17 +113,17 @@ export class UIManager {
     const menu = document.createElement('div')
     menu.className = 'difficulty-menu'
     menu.innerHTML = `
-      <button class="difficulty-option" data-level="beginner">
-        <span class="difficulty-icon">🌱</span>
-        <span class="difficulty-name">Beginner</span>
+      <button class="difficulty-option" data-level="easy">
+        <div class="difficulty-icon">🌱</div>
+        <span class="difficulty-name">Easy</span>
       </button>
-      <button class="difficulty-option" data-level="intermediate">
-        <span class="difficulty-icon">🔥</span>
-        <span class="difficulty-name">Intermediate</span>
+      <button class="difficulty-option" data-level="medium">
+        <div class="difficulty-icon">🔥</div>
+        <span class="difficulty-name">Medium</span>
       </button>
-      <button class="difficulty-option" data-level="advanced">
-        <span class="difficulty-icon">⚡</span>
-        <span class="difficulty-name">Advanced</span>
+      <button class="difficulty-option" data-level="hard">
+        <div class="difficulty-icon">⚡</div>
+        <span class="difficulty-name">Hard</span>
       </button>
     `
     
@@ -137,7 +136,7 @@ export class UIManager {
     // Add click listeners to options
     menu.querySelectorAll('.difficulty-option').forEach(option => {
       option.addEventListener('click', (e) => {
-        const level = (e.currentTarget as HTMLElement).dataset.level as 'beginner' | 'intermediate' | 'advanced'
+        const level = (e.currentTarget as HTMLElement).dataset.level as 'easy' | 'medium' | 'hard'
         this.setDifficulty(level)
         menu.remove()
       })
@@ -153,10 +152,10 @@ export class UIManager {
     }, 0)
   }
 
-  private setDifficulty(level: 'beginner' | 'intermediate' | 'advanced'): void {
+  private setDifficulty(level: 'easy' | 'medium' | 'hard'): void {
     this.currentDifficulty = level
     const button = document.getElementById('difficulty-btn')!
-    const icon = level === 'beginner' ? '🌱' : level === 'intermediate' ? '🔥' : '⚡'
+    const icon = level === 'easy' ? '🌱' : level === 'medium' ? '🔥' : '⚡'
     const text = level.charAt(0).toUpperCase() + level.slice(1)
     
     button.innerHTML = `
@@ -250,7 +249,7 @@ export class UIManager {
     this.homeKeyListener = handleHomeKeydown
   }
 
-  private startChallenge(challengeId: string, level: 'beginner' | 'intermediate' | 'advanced'): void {
+  private startChallenge(challengeId: string, level: 'easy' | 'medium' | 'hard'): void {
     this.cleanupResultsListeners()
     this.cleanupHomeListeners()
     this.currentQuestionId = null // Reset to ensure first question gets displayed
@@ -269,7 +268,6 @@ export class UIManager {
     mainContent.innerHTML = `
       <div class="game-screen">
         <div class="game-header">
-          <button id="back-to-home" class="back-btn">← Home</button>
           <div class="game-info">
             <span id="challenge-name" class="challenge-name"></span>
             <span id="difficulty-badge" class="difficulty-badge"></span>
@@ -323,11 +321,6 @@ export class UIManager {
   }
 
   private setupGameListeners(): void {
-    document.getElementById('back-to-home')?.addEventListener('click', () => {
-      this.challengeManager.endCurrentChallenge()
-      this.showHomeScreen()
-    })
-    
     document.getElementById('submit-btn')?.addEventListener('click', () => {
       this.submitCurrentAnswer()
     })
@@ -358,7 +351,7 @@ export class UIManager {
     sessionTimer.textContent = `${state.sessionTimeLeft}s`
     
     // Add warning class when time is low
-    if (state.sessionTimeLeft <= 10) {
+    if (state.sessionTimeLeft <= 5) {
       sessionTimer.classList.add('warning')
     } else {
       sessionTimer.classList.remove('warning')
@@ -471,9 +464,12 @@ export class UIManager {
     const mainContent = document.getElementById('main-content')!
     const state = this.gameState.getState()
     
-    // Store the current challenge and difficulty for play again
+    // Store the current challenge and difficulty for play again BEFORE any state changes
     const currentChallenge = state.currentChallenge
     const currentLevel = state.currentLevel
+    
+    // Additional debugging
+    console.log('Results screen - stored challenge:', currentChallenge, 'level:', currentLevel)
     
     const accuracy = state.totalQuestions > 0 ? Math.round((state.correctAnswers / state.totalQuestions) * 100) : 0
     const avgTimePerQuestion = state.totalQuestions > 0 ? (this.totalAnswerTime / state.totalQuestions / 1000).toFixed(1) : '0.0'
@@ -521,9 +517,14 @@ export class UIManager {
     `
     
     const playAgain = () => {
-      // Use stored challenge info instead of current state
-      if (currentChallenge) {
-        this.startChallenge(currentChallenge, currentLevel || this.currentDifficulty)
+      console.log('Play again clicked - using challenge:', currentChallenge, 'level:', currentLevel)
+      // Use stored challenge info and ensure we have valid values
+      if (currentChallenge && currentLevel) {
+        this.startChallenge(currentChallenge, currentLevel)
+      } else {
+        // Fallback to current difficulty if level is missing
+        console.log('Fallback to current difficulty:', this.currentDifficulty)
+        this.startChallenge(currentChallenge || 'arithmetic', this.currentDifficulty)
       }
     }
     
@@ -548,7 +549,6 @@ export class UIManager {
     mainContent.innerHTML = `
       <div class="settings-screen">
         <div class="section-header">
-          <button id="back-btn" class="back-btn">← Back</button>
           <h2>Settings</h2>
         </div>
         
@@ -582,10 +582,6 @@ export class UIManager {
   }
 
   private setupSettingsListeners(): void {
-    document.getElementById('back-btn')?.addEventListener('click', () => {
-      this.showHomeScreen()
-    })
-    
     document.getElementById('sound-toggle')?.addEventListener('change', (e) => {
       const enabled = (e.target as HTMLInputElement).checked
       this.audioManager.setEnabled(enabled)
@@ -613,7 +609,6 @@ export class UIManager {
     mainContent.innerHTML = `
       <div class="achievements-screen">
         <div class="section-header">
-          <button id="back-btn" class="back-btn">← Back</button>
           <h2>Achievements</h2>
         </div>
         
@@ -641,10 +636,6 @@ export class UIManager {
         </div>
       </div>
     `
-    
-    document.getElementById('back-btn')?.addEventListener('click', () => {
-      this.showHomeScreen()
-    })
   }
 
   private getLockedAchievements(): { name: string, description: string }[] {

@@ -2,7 +2,7 @@ import type { MathQuestion } from '../core/GameStateManager'
 import type { MathChallengeGenerator } from './ChallengeManager'
 
 export class GeometryChallenge implements MathChallengeGenerator {
-  generateQuestion(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
+  generateQuestion(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     const shapes = ['rectangle', 'triangle', 'circle', 'square', 'parallelogram']
     const shape = shapes[Math.floor(Math.random() * shapes.length)]
     
@@ -25,8 +25,8 @@ export class GeometryChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateRectangleQuestion(level: 'beginner' | 'intermediate' | 'advanced', operation: string): MathQuestion {
-    const maxSize = level === 'beginner' ? 12 : level === 'intermediate' ? 25 : 50
+  private generateRectangleQuestion(level: 'easy' | 'medium' | 'hard', operation: string): MathQuestion {
+    const maxSize = level === 'easy' ? 12 : level === 'medium' ? 25 : 50
     const length = Math.floor(Math.random() * maxSize) + 1
     const width = Math.floor(Math.random() * maxSize) + 1
     
@@ -53,8 +53,8 @@ export class GeometryChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateTriangleQuestion(level: 'beginner' | 'intermediate' | 'advanced', operation: string): MathQuestion {
-    const maxSize = level === 'beginner' ? 12 : level === 'intermediate' ? 25 : 50
+  private generateTriangleQuestion(level: 'easy' | 'medium' | 'hard', operation: string): MathQuestion {
+    const maxSize = level === 'easy' ? 12 : level === 'medium' ? 25 : 50
     
     if (operation === 'area') {
       const base = Math.floor(Math.random() * maxSize) + 1
@@ -87,8 +87,8 @@ export class GeometryChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateCircleQuestion(level: 'beginner' | 'intermediate' | 'advanced', operation: string): MathQuestion {
-    const maxRadius = level === 'beginner' ? 10 : level === 'intermediate' ? 20 : 35
+  private generateCircleQuestion(level: 'easy' | 'medium' | 'hard', operation: string): MathQuestion {
+    const maxRadius = level === 'easy' ? 10 : level === 'medium' ? 20 : 35
     const radius = Math.floor(Math.random() * maxRadius) + 1
     
     if (operation === 'area') {
@@ -116,8 +116,8 @@ export class GeometryChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateSquareQuestion(level: 'beginner' | 'intermediate' | 'advanced', operation: string): MathQuestion {
-    const maxSize = level === 'beginner' ? 12 : level === 'intermediate' ? 25 : 50
+  private generateSquareQuestion(level: 'easy' | 'medium' | 'hard', operation: string): MathQuestion {
+    const maxSize = level === 'easy' ? 12 : level === 'medium' ? 25 : 50
     const side = Math.floor(Math.random() * maxSize) + 1
     
     if (operation === 'area') {
@@ -145,8 +145,8 @@ export class GeometryChallenge implements MathChallengeGenerator {
     }
   }
   
-  private generateParallelogramQuestion(level: 'beginner' | 'intermediate' | 'advanced', operation: string): MathQuestion {
-    const maxSize = level === 'beginner' ? 12 : level === 'intermediate' ? 25 : 50
+  private generateParallelogramQuestion(level: 'easy' | 'medium' | 'hard', operation: string): MathQuestion {
+    const maxSize = level === 'easy' ? 12 : level === 'medium' ? 25 : 50
     
     if (operation === 'area') {
       const base = Math.floor(Math.random() * maxSize) + 1
@@ -177,11 +177,11 @@ export class GeometryChallenge implements MathChallengeGenerator {
     }
   }
   
-  getTimeLimit(level: 'beginner' | 'intermediate' | 'advanced'): number {
+  getTimeLimit(level: 'easy' | 'medium' | 'hard'): number {
     switch (level) {
-      case 'beginner': return 20
-      case 'intermediate': return 15
-      case 'advanced': return 12
+      case 'easy': return 20
+      case 'medium': return 15
+      case 'hard': return 12
       default: return 20
     }
   }

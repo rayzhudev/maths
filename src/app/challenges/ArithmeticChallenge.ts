@@ -2,25 +2,22 @@ import type { MathQuestion } from '../core/GameStateManager'
 import type { MathChallengeGenerator } from './ChallengeManager'
 
 export class ArithmeticChallenge implements MathChallengeGenerator {
-  generateQuestion(level: 'beginner' | 'intermediate' | 'advanced'): MathQuestion {
+  generateQuestion(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     const operations = ['+', '-', '*', '/']
     const operation = operations[Math.floor(Math.random() * operations.length)]
     
     let num1: number, num2: number, answer: number, question: string
     
-    switch (level) {
-      case 'beginner':
-        num1 = Math.floor(Math.random() * 20) + 1
-        num2 = Math.floor(Math.random() * 20) + 1
-        break
-      case 'intermediate':
-        num1 = Math.floor(Math.random() * 100) + 1
-        num2 = Math.floor(Math.random() * 100) + 1
-        break
-      case 'advanced':
-        num1 = Math.floor(Math.random() * 500) + 1
-        num2 = Math.floor(Math.random() * 500) + 1
-        break
+    // Set number ranges based on difficulty level
+    if (level === 'easy') {
+      num1 = Math.floor(Math.random() * 20) + 1
+      num2 = Math.floor(Math.random() * 20) + 1
+    } else if (level === 'medium') {
+      num1 = Math.floor(Math.random() * 100) + 1
+      num2 = Math.floor(Math.random() * 100) + 1
+    } else { // hard
+      num1 = Math.floor(Math.random() * 500) + 1
+      num2 = Math.floor(Math.random() * 500) + 1
     }
     
     switch (operation) {
@@ -36,10 +33,10 @@ export class ArithmeticChallenge implements MathChallengeGenerator {
         break
       case '*':
         // Keep numbers smaller for multiplication
-        if (level === 'beginner') {
+        if (level === 'easy') {
           num1 = Math.floor(Math.random() * 12) + 1
           num2 = Math.floor(Math.random() * 12) + 1
-        } else if (level === 'intermediate') {
+        } else if (level === 'medium') {
           num1 = Math.floor(Math.random() * 25) + 1
           num2 = Math.floor(Math.random() * 25) + 1
         } else {
@@ -51,9 +48,9 @@ export class ArithmeticChallenge implements MathChallengeGenerator {
         break
       case '/':
         // Ensure clean division
-        answer = level === 'beginner' ? Math.floor(Math.random() * 12) + 1 :
-                level === 'intermediate' ? Math.floor(Math.random() * 25) + 1 :
-                Math.floor(Math.random() * 50) + 1
+        answer = level === 'easy' ? Math.floor(Math.random() * 12) + 1 :
+          level === 'medium' ? Math.floor(Math.random() * 25) + 1 :
+          Math.floor(Math.random() * 50) + 1
         num2 = Math.floor(Math.random() * 10) + 2
         num1 = answer * num2
         question = `${num1} ÷ ${num2}`
@@ -71,20 +68,18 @@ export class ArithmeticChallenge implements MathChallengeGenerator {
       category: 'arithmetic'
     }
   }
-  
-  getTimeLimit(level: 'beginner' | 'intermediate' | 'advanced'): number {
+
+  getTimeLimit(level: 'easy' | 'medium' | 'hard'): number {
     switch (level) {
-      case 'beginner': return 15
-      case 'intermediate': return 10
-      case 'advanced': return 7
+      case 'easy': return 15
+      case 'medium': return 10
+      case 'hard': return 7
       default: return 15
     }
   }
-  
-  validateAnswer(question: MathQuestion, userAnswer: string): boolean {
-    const numAnswer = parseFloat(userAnswer.trim())
-    return !isNaN(numAnswer) && Math.abs(numAnswer - question.answer) < 0.001
-  }
-  
 
+  validateAnswer(question: MathQuestion, userAnswer: string): boolean {
+    const numericAnswer = parseFloat(userAnswer.trim())
+    return !isNaN(numericAnswer) && Math.abs(numericAnswer - question.answer) < 0.001
+  }
 } 
