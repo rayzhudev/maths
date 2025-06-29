@@ -480,7 +480,7 @@ export class UIManager {
     console.log('Results screen - stored challenge:', currentChallenge, 'level:', currentLevel)
     
     const accuracy = state.totalQuestions > 0 ? Math.round((state.correctAnswers / state.totalQuestions) * 100) : 0
-    const avgTimePerQuestion = state.totalQuestions > 0 ? (this.totalAnswerTime / state.totalQuestions / 1000).toFixed(1) : '0.0'
+    const avgTimePerQuestion = state.totalQuestions > 0 ? (this.totalAnswerTime / state.totalQuestions / 1000).toFixed(3) : '0.000'
     const challengeName = this.challengeManager.getChallenges()
       .find(c => c.id === state.currentChallenge)?.name || 'Challenge'
     
