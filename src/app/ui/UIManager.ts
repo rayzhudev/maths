@@ -47,7 +47,7 @@ export class UIManager {
       <div id="main-container" class="main-container">
         <div id="sidebar" class="sidebar">
           <div class="app-title">
-            <h1>🧮 Math Practice</h1>
+            <h1>Math</h1>
           </div>
           
           <div class="challenges-list">
@@ -198,53 +198,22 @@ export class UIManager {
     const progress = this.progressTracker.getProgress()
     
     mainContent.innerHTML = `
-      <div class="ready-screen">
-        <div class="ready-header">
+      <div class="ready-screen" style="display: flex; flex-direction: column; height: 100%; min-height: 400px;">
+        <div class="ready-header" style="text-align: center; margin-top: 2rem;">
           <h1>🧮 Basic Arithmetic</h1>
           <div class="difficulty-display">
             <span class="difficulty-badge difficulty-${this.currentDifficulty}">${this.currentDifficulty}</span>
           </div>
         </div>
-        
-        <div class="ready-content">
-          <div class="game-info">
-            <p class="session-info">🕐 60 seconds to answer as many questions as you can!</p>
-            <p class="challenge-info">Addition, subtraction, multiplication & division</p>
-          </div>
-          
-          <div class="start-prompt">
-            <div class="start-action">
-              <div class="start-text">Press <kbd>Space</kbd> or <kbd>Enter</kbd> to start!</div>
-              <button id="start-btn" class="start-btn">Start Challenge</button>
+        <div class="ready-content" style="flex: 1; display: flex; align-items: center; justify-content: center;">
+          <div class="start-prompt" style="width: 100%;">
+            <div class="start-action" style="display: flex; align-items: center; justify-content: center;">
+              <div class="start-text" style="font-size: 1.5rem; text-align: center;">
+                Press <kbd>Space</kbd> or <kbd>Enter</kbd> to start!
+              </div>
             </div>
           </div>
         </div>
-        
-        <div class="stats-overview">
-          <div class="stat-card">
-            <div class="stat-value">${progress.totalQuestions}</div>
-            <div class="stat-label">Questions Solved</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${progress.bestStreak}</div>
-            <div class="stat-label">Best Streak</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${progress.totalQuestions > 0 ? Math.round((progress.totalCorrect / progress.totalQuestions) * 100) : 0}%</div>
-            <div class="stat-label">Accuracy</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${progress.achievements.length}</div>
-            <div class="stat-label">Achievements</div>
-          </div>
-        </div>
-
-        <div class="action-buttons">
-          <button id="achievements-btn" class="action-btn">🏆 Achievements</button>
-          <button id="settings-btn" class="action-btn">⚙️ Settings</button>
-        </div>
-
-        ${this.renderRecentAchievements()}
       </div>
     `
     
@@ -450,7 +419,7 @@ export class UIManager {
     }
     
     // Show brief feedback with correct answer
-    this.showBriefFeedback(isCorrect, currentQuestion?.answer, answer)
+    this.showBriefFeedback(currentQuestion?.question, isCorrect, currentQuestion?.answer, answer)
     
     // Play audio feedback
     if (isCorrect) {
@@ -475,7 +444,10 @@ export class UIManager {
     return isCorrect
   }
 
-  private showBriefFeedback(isCorrect: boolean, correctAnswer?: number, answer?: string): void {
+  private showBriefFeedback(question: string | undefined, isCorrect: boolean, correctAnswer?: number, answer?: string): void {
+    // Clean up question by removing "= ?" from the end
+    const cleanQuestion = question?.replace(/\s*=\s*\??\s*$/, '') || 'Unknown question'
+    
     const feedbackHTML = isCorrect ? `
         <div class="brief-feedback correct">
           <span class="feedback-icon">✅</span>
@@ -484,9 +456,9 @@ export class UIManager {
       ` : `
         <div class="brief-feedback incorrect">
           <span class="feedback-icon">❌</span>
-          <span class="feedback-text">${answer}</span>
+          <span class="feedback-text">${answer || 'No answer'}</span>
           <span class="feedback-icon">☑️</span>
-          <span class="feedback-text">${correctAnswer}</span>
+          <span class="feedback-text">${cleanQuestion} = ${correctAnswer}</span>
         </div>
       `
     

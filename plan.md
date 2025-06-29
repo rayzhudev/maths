@@ -48,6 +48,8 @@
 - ✅ **Session Statistics**: Real-time tracking of correct/incorrect answers
 - ✅ **Session Timer**: Countdown display with visual warnings at 10 seconds
 - ✅ **Educational Feedback**: Shows correct answer for both correct AND incorrect responses
+- ✅ **Concise Wrong Answer Display**: Extremely compact format "❌ 90 ✓ 25 × 4 = 100"
+- ✅ **Ultra-Minimal Feedback**: Single line showing your answer and correct solution efficiently
 - ✅ **Optimized Feedback Position**: Feedback appears above questions for better visual flow
 - ✅ **Persistent Feedback**: Feedback from previous question stays visible while working on current question
 - ✅ **Robust Feedback Persistence**: Feedback state preserved across any screen rebuilds during gameplay
