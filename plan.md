@@ -54,7 +54,7 @@
 - ✅ **Persistent Feedback**: Feedback from previous question stays visible while working on current question
 - ✅ **Robust Feedback Persistence**: Feedback state preserved across any screen rebuilds during gameplay
 - ✅ **Consistent Feedback Sizing**: Fixed feedback container prevents layout shifts during gameplay
-- ✅ **Answer Time Tracking**: Measures and displays average time per question
+- ✅ **Challenge Time Tracking**: Measures and displays total challenge session duration
 - ✅ **Keyboard Restart**: Press Space or Enter on results screen to play again instantly
 - ✅ **Real-time Scoring**: Difficulty-based points with streak bonuses
 - ✅ **Achievement System**: 7+ unlockable badges with local persistence

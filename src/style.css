@@ -1125,14 +1125,7 @@ input[type="range"] {
   }
 }
 
-.welcome-screen,
-.challenge-selection,
-.game-screen,
-.results-screen,
-.settings-screen,
-.achievements-screen {
-  animation: fadeIn 0.5s ease-out;
-}
+/* Removed fadeIn animation for instant screen transitions */
 
 /* Performance Optimizations */
 .challenge-card,

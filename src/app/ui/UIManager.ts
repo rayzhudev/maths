@@ -11,7 +11,7 @@ export class UIManager {
   private resultsKeyListener: ((e: KeyboardEvent) => void) | null = null
   private homeKeyListener: ((e: KeyboardEvent) => void) | null = null
   private questionStartTime: number = 0
-  private totalAnswerTime: number = 0
+  private totalAnswerTime: number = 60000 // Fixed 60-second challenge duration
   private lastFeedbackContent: string = ''
   
   // Cache frequently accessed DOM elements for performance
@@ -153,7 +153,19 @@ export class UIManager {
   }
 
   private setDifficulty(level: 'easy' | 'medium' | 'hard'): void {
+    // Check if there's an active game or challenge
+    const state = this.gameState.getState()
+    const wasInGame = state.isActive || this.currentScreen === 'game'
+    
+    // End any current challenge
+    if (state.isActive) {
+      this.challengeManager.endCurrentChallenge()
+    }
+    
+    // Update the difficulty level
     this.currentDifficulty = level
+    
+    // Update the difficulty button display
     const button = document.getElementById('difficulty-btn')!
     const icon = level === 'easy' ? '🌱' : level === 'medium' ? '🔥' : '⚡'
     const text = level.charAt(0).toUpperCase() + level.slice(1)
@@ -162,6 +174,9 @@ export class UIManager {
       <span class="difficulty-icon">${icon}</span>
       <span class="difficulty-text">${text}</span>
     `
+    
+    // Always refresh the home screen to show new difficulty
+    this.showHomeScreen()
   }
 
   private cleanupResultsListeners(): void {
@@ -198,20 +213,20 @@ export class UIManager {
     mainContent.innerHTML = `
       <div class="ready-screen" style="display: flex; flex-direction: column; height: 100%; min-height: 400px;">
         <div class="ready-header" style="text-align: center; margin-top: 2rem;">
-          <h1>🧮 Basic Arithmetic</h1>
+          <h1>Arithmetic</h1>
           <div class="difficulty-display">
             <span class="difficulty-badge difficulty-${this.currentDifficulty}">${this.currentDifficulty}</span>
           </div>
         </div>
-        <div class="ready-content" style="flex: 1; display: flex; align-items: center; justify-content: center;">
-          <div class="start-prompt" style="width: 100%;">
-            <div class="start-action" style="display: flex; align-items: center; justify-content: center;">
-              <div class="start-text" style="font-size: 1.5rem; text-align: center;">
-                Press <kbd>Space</kbd> or <kbd>Enter</kbd> to start!
-              </div>
-            </div>
-          </div>
-        </div>
+                 <div class="ready-content" style="flex: 1; display: flex; align-items: center; justify-content: center; margin-top: -26vh;">
+           <div class="start-prompt" style="width: 100%;">
+             <div class="start-action" style="display: flex; align-items: center; justify-content: center;">
+               <div class="start-text" style="font-size: 1.5rem; text-align: center;">
+                 Press <kbd>Space</kbd> or <kbd>Enter</kbd> to start!
+               </div>
+             </div>
+           </div>
+         </div>
       </div>
     `
     
@@ -253,7 +268,6 @@ export class UIManager {
     this.cleanupResultsListeners()
     this.cleanupHomeListeners()
     this.currentQuestionId = null // Reset to ensure first question gets displayed
-    this.totalAnswerTime = 0 // Reset timing stats
     this.lastFeedbackContent = '' // Clear previous feedback for fresh start
     this.challengeManager.startChallenge(challengeId, level)
     
@@ -397,12 +411,6 @@ export class UIManager {
     const currentQuestion = state.currentQuestion
     const isCorrect = this.challengeManager.submitAnswer(answer)
     
-    // Record answer time
-    if (this.questionStartTime > 0) {
-      const answerTime = Date.now() - this.questionStartTime
-      this.totalAnswerTime += answerTime
-    }
-    
     // Show brief feedback with correct answer
     this.showBriefFeedback(currentQuestion?.question, isCorrect, currentQuestion?.answer, answer)
     
@@ -502,7 +510,7 @@ export class UIManager {
           </div>
           <div class="result-card">
             <div class="result-value">${avgTimePerQuestion}s</div>
-            <div class="result-label">Avg Time</div>
+            <div class="result-label">Avg Question Time</div>
           </div>
         </div>
         

@@ -38,52 +38,52 @@ export class ChallengeManager {
     const challengeTypes: ChallengeType[] = [
       {
         id: 'arithmetic',
-        name: 'Basic Arithmetic',
+        name: 'Arithmetic',
         description: 'Addition, subtraction, multiplication, and division',
         icon: '➕',
         color: '#4F46E5',
         generator: new ArithmeticChallenge()
-      },
-      {
-        id: 'mental-math',
-        name: 'Mental Math',
-        description: 'Quick calculations and number patterns',
-        icon: '🧠',
-        color: '#059669',
-        generator: new MentalMathChallenge()
-      },
-      {
-        id: 'fractions',
-        name: 'Fractions',
-        description: 'Working with fractions and decimals',
-        icon: '🔢',
-        color: '#DC2626',
-        generator: new FractionsChallenge()
-      },
-      {
-        id: 'percentages',
-        name: 'Percentages',
-        description: 'Percentage calculations and conversions',
-        icon: '%',
-        color: '#7C2D12',
-        generator: new PercentageChallenge()
-      },
-      {
-        id: 'algebra',
-        name: 'Basic Algebra',
-        description: 'Simple algebraic expressions and equations',
-        icon: '🔤',
-        color: '#7C3AED',
-        generator: new AlgebraChallenge()
-      },
-      {
-        id: 'geometry',
-        name: 'Geometry',
-        description: 'Area, perimeter, and basic shape calculations',
-        icon: '📐',
-        color: '#EA580C',
-        generator: new GeometryChallenge()
-      }
+      }//,
+      // {
+      //   id: 'mental-math',
+      //   name: 'Mental Math',
+      //   description: 'Quick calculations and number patterns',
+      //   icon: '🧠',
+      //   color: '#059669',
+      //   generator: new MentalMathChallenge()
+      // },
+      // {
+      //   id: 'fractions',
+      //   name: 'Fractions',
+      //   description: 'Working with fractions and decimals',
+      //   icon: '🔢',
+      //   color: '#DC2626',
+      //   generator: new FractionsChallenge()
+      // },
+      // {
+      //   id: 'percentages',
+      //   name: 'Percentages',
+      //   description: 'Percentage calculations and conversions',
+      //   icon: '%',
+      //   color: '#7C2D12',
+      //   generator: new PercentageChallenge()
+      // },
+      // {
+      //   id: 'algebra',
+      //   name: 'Basic Algebra',
+      //   description: 'Simple algebraic expressions and equations',
+      //   icon: '🔤',
+      //   color: '#7C3AED',
+      //   generator: new AlgebraChallenge()
+      // },
+      // {
+      //   id: 'geometry',
+      //   name: 'Geometry',
+      //   description: 'Area, perimeter, and basic shape calculations',
+      //   icon: '📐',
+      //   color: '#EA580C',
+      //   generator: new GeometryChallenge()
+      // }
     ]
 
     challengeTypes.forEach(challenge => {
