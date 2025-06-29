@@ -21,6 +21,7 @@ export interface MathChallengeGenerator {
   generateQuestion(level: 'easy' | 'medium' | 'hard'): MathQuestion
   getTimeLimit(level: 'easy' | 'medium' | 'hard'): number
   validateAnswer(question: MathQuestion, userAnswer: string): boolean
+  lastQuestion?: MathQuestion
 }
 
 export class ChallengeManager {

@@ -2,7 +2,32 @@ import type { MathQuestion } from '../core/GameStateManager'
 import type { MathChallengeGenerator } from './ChallengeManager'
 
 export class PercentageChallenge implements MathChallengeGenerator {
+  lastQuestion?: MathQuestion
+
   generateQuestion(level: 'easy' | 'medium' | 'hard'): MathQuestion {
+    let question: MathQuestion
+    let attempts = 0
+    const maxAttempts = 10
+
+    // Keep generating until we get a different question or reach max attempts
+    do {
+      question = this.generateSingleQuestion(level)
+      attempts++
+    } while (
+      this.lastQuestion &&
+      this.questionsAreSame(question, this.lastQuestion) &&
+      attempts < maxAttempts
+    )
+
+    this.lastQuestion = question
+    return question
+  }
+
+  private questionsAreSame(q1: MathQuestion, q2: MathQuestion): boolean {
+    return q1.question === q2.question
+  }
+
+  private generateSingleQuestion(level: 'easy' | 'medium' | 'hard'): MathQuestion {
     const operations = ['basic-percent', 'percent-of', 'find-total', 'percent-change', 'discount', 'tip']
     const operation = operations[Math.floor(Math.random() * operations.length)]
     

@@ -10,6 +10,7 @@ export class UIManager {
   private currentQuestionId: string | null = null
   private resultsKeyListener: ((e: KeyboardEvent) => void) | null = null
   private homeKeyListener: ((e: KeyboardEvent) => void) | null = null
+  private restartReady = false;
   private questionStartTime: number = 0
   private totalAnswerTime: number = 60000 // Fixed 60-second challenge duration
   private lastFeedbackContent: string = ''
@@ -548,14 +549,10 @@ export class UIManager {
     this.currentScreen = 'results'
     const mainContent = document.getElementById('main-content')!
     const state = this.gameState.getState()
-    
-    // Store the current challenge and difficulty for play again BEFORE any state changes
+
     const currentChallenge = state.currentChallenge
     const currentLevel = state.currentLevel
-    
-    // Additional debugging
-    console.log('Results screen - stored challenge:', currentChallenge, 'level:', currentLevel)
-    
+
     const accuracy = state.totalQuestions > 0 ? Math.round((state.correctAnswers / state.totalQuestions) * 100) : 0
     const avgTimePerQuestion = state.totalQuestions > 0 ? (this.totalAnswerTime / state.totalQuestions / 1000).toFixed(3) : '0.000'
     const challengeName = this.challengeManager.getChallenges()
@@ -602,29 +599,26 @@ export class UIManager {
     `
     
     const playAgain = () => {
-      console.log('Play again clicked - using challenge:', currentChallenge, 'level:', currentLevel)
-      // Use stored challenge info and ensure we have valid values
       if (currentChallenge && currentLevel) {
         this.startChallenge(currentChallenge, currentLevel)
       } else {
-        // Fallback to current difficulty if level is missing
-        console.log('Fallback to current difficulty:', this.currentDifficulty)
         this.startChallenge(currentChallenge || 'arithmetic', this.currentDifficulty)
       }
     }
     
-    // Set up Play Again button click handler
     document.getElementById('play-again-btn')?.addEventListener('click', playAgain)
     
-    // Add keyboard listeners for results screen
     this.resultsKeyListener = (e: KeyboardEvent) => {
-      if (e.key === ' ' || e.key === 'Enter') {
+      if ((e.key === ' ' || e.key === 'Enter') && this.restartReady) {
         e.preventDefault()
         playAgain()
       }
     }
     
     document.addEventListener('keydown', this.resultsKeyListener)
+
+    this.restartReady = false
+    setTimeout(() => { this.restartReady = true }, 1000)
   }
 
   showSettings(): void {

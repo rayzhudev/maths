@@ -21,6 +21,7 @@
 - ✅ **PercentageChallenge**: Real-world percentage calculations, tips, discounts
 - ✅ **AlgebraChallenge**: Linear equations, evaluation, word problems
 - ✅ **GeometryChallenge**: Area, perimeter, shape calculations
+- ✅ **Duplicate Prevention System**: Each generator tracks last question and ensures variety
 
 ### Difficulty System
 - ✅ **Three Levels**: Easy, Medium, Hard for each challenge
@@ -55,12 +56,13 @@
 - ✅ **Robust Feedback Persistence**: Feedback state preserved across any screen rebuilds during gameplay
 - ✅ **Consistent Feedback Sizing**: Fixed feedback container prevents layout shifts during gameplay
 - ✅ **Challenge Time Tracking**: Measures and displays total challenge session duration
-- ✅ **Keyboard Restart**: Press Space or Enter on results screen to play again instantly
+- ✅ **Keyboard Restart**: Press Space or Enter on results screen to play again instantly (with cooldown)
 - ✅ **Real-time Scoring**: Difficulty-based points with streak bonuses
 - ✅ **Achievement System**: 7+ unlockable badges with local persistence
 - ✅ **Progress Tracking**: Per-challenge statistics and overall performance
 - ✅ **Audio Feedback**: Procedural success/failure/achievement sounds
 - ✅ **Streak Tracking**: Consecutive correct answers with bonus scoring
+- ✅ **Duplicate Prevention**: Same question never appears twice in a row
 
 ### Performance & Optimization
 - ✅ **Zero Dependencies**: Pure TypeScript/JavaScript implementation
