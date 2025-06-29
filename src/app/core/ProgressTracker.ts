@@ -11,7 +11,7 @@ export interface UserProgress {
 
 export interface ChallengeStats {
   challengeType: string
-  level: 'beginner' | 'intermediate' | 'advanced'
+  level: 'easy' | 'medium' | 'hard'
   timesPlayed: number
   bestScore: number
   bestAccuracy: number
@@ -72,7 +72,7 @@ export class ProgressTracker {
     return { ...this.progress }
   }
 
-  recordGameSession(challengeType: string, level: 'beginner' | 'intermediate' | 'advanced', 
+  recordGameSession(challengeType: string, level: 'easy' | 'medium' | 'hard', 
                    score: number, correct: number, total: number, timeSpent: number): void {
     // Update overall stats
     this.progress.totalScore += score
@@ -194,7 +194,7 @@ export class ProgressTracker {
     return this.progress.achievements.filter(ach => ach.unlockedAt > oneWeekAgo)
   }
 
-  getChallengeStats(challengeType: string, level: 'beginner' | 'intermediate' | 'advanced'): ChallengeStats | null {
+  getChallengeStats(challengeType: string, level: 'easy' | 'medium' | 'hard'): ChallengeStats | null {
     return this.progress.challengeStats.get(`${challengeType}-${level}`) || null
   }
 
