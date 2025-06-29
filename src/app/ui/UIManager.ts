@@ -21,6 +21,15 @@ export class UIManager {
     questionText?: HTMLElement
   } = {}
 
+  private isMobileDevice(): boolean {
+    // Check for touch capability and screen size
+    const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    const smallScreen = window.innerWidth <= 768
+    const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    
+    return hasTouchScreen && (smallScreen || isMobileUserAgent)
+  }
+
   constructor(
     private gameState: GameStateManager,
     private challengeManager: ChallengeManager,
@@ -44,10 +53,30 @@ export class UIManager {
     const app = document.querySelector('#app')!
     app.innerHTML = `
       <div id="main-container" class="main-container">
-        <div id="sidebar" class="sidebar">
-          <div class="app-title">
-            <h1>Math</h1>
+        ${this.isMobileDevice() ? `
+          <div class="mobile-header">
+            <button class="hamburger-btn" id="hamburger-btn">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <h1 class="mobile-title">Math Practice</h1>
           </div>
+        ` : ''}
+        
+        <div id="sidebar" class="sidebar">
+          ${this.isMobileDevice() ? `
+            <div class="sidebar-header">
+              <div class="app-title">
+                <h1>Math</h1>
+              </div>
+              <button class="close-sidebar-btn" id="close-sidebar-btn">×</button>
+            </div>
+          ` : `
+            <div class="app-title">
+              <h1>Math</h1>
+            </div>
+          `}
           
           <div class="challenges-list">
             <!-- Challenges will be populated here -->
@@ -61,6 +90,8 @@ export class UIManager {
           </div>
         </div>
         
+        ${this.isMobileDevice() ? '<div class="sidebar-overlay" id="sidebar-overlay"></div>' : ''}
+        
         <main id="main-content" class="main-content">
           <!-- Content will be dynamically loaded here -->
         </main>
@@ -71,6 +102,10 @@ export class UIManager {
     
     this.populateChallengesList()
     this.setupSidebarListeners()
+    
+    if (this.isMobileDevice()) {
+      this.setupMobileMenu()
+    }
   }
 
   private populateChallengesList(): void {
@@ -100,6 +135,35 @@ export class UIManager {
     // Difficulty selector
     document.getElementById('difficulty-btn')?.addEventListener('click', () => {
       this.showDifficultyMenu()
+    })
+  }
+
+  private setupMobileMenu(): void {
+    const hamburgerBtn = document.getElementById('hamburger-btn')
+    const closeSidebarBtn = document.getElementById('close-sidebar-btn')
+    const sidebarOverlay = document.getElementById('sidebar-overlay')
+    const sidebar = document.getElementById('sidebar')
+
+    const openSidebar = () => {
+      sidebar?.classList.add('sidebar-open')
+      sidebarOverlay?.classList.add('overlay-visible')
+    }
+
+    const closeSidebar = () => {
+      sidebar?.classList.remove('sidebar-open')
+      sidebarOverlay?.classList.remove('overlay-visible')
+    }
+
+    hamburgerBtn?.addEventListener('click', openSidebar)
+    closeSidebarBtn?.addEventListener('click', closeSidebar)
+    sidebarOverlay?.addEventListener('click', closeSidebar)
+
+    // Close sidebar when challenge is selected on mobile
+    document.querySelectorAll('.challenge-item').forEach(button => {
+      button.addEventListener('click', () => {
+        // Small delay to allow navigation to complete
+        setTimeout(closeSidebar, 100)
+      })
     })
   }
 
@@ -218,13 +282,16 @@ export class UIManager {
             <span class="difficulty-badge difficulty-${this.currentDifficulty}">${this.currentDifficulty}</span>
           </div>
         </div>
-                 <div class="ready-content" style="flex: 1; display: flex; align-items: center; justify-content: center; margin-top: -26vh;">
+                 <div class="ready-content touch-start-area" style="flex: 1; display: flex; align-items: center; justify-content: center; margin-top: -26vh; cursor: pointer;">
            <div class="start-prompt" style="width: 100%;">
-             <div class="start-action" style="display: flex; align-items: center; justify-content: center;">
-               <div class="start-text" style="font-size: 1.5rem; text-align: center;">
-                 Press <kbd>Space</kbd> or <kbd>Enter</kbd> to start!
+                            <div class="start-action" style="display: flex; align-items: center; justify-content: center;">
+                 <div class="start-text" style="font-size: 1.5rem; text-align: center;">
+                   ${this.isMobileDevice() ? 
+                     'Tap anywhere to start!' : 
+                     'Press <kbd>Space</kbd> or <kbd>Enter</kbd> to start!'
+                   }
+                 </div>
                </div>
-             </div>
            </div>
          </div>
       </div>
@@ -236,6 +303,16 @@ export class UIManager {
   private setupReadyScreenListeners(): void {
     const startGame = () => {
       this.startChallenge('arithmetic', this.currentDifficulty)
+    }
+    
+    // Touch/click to start anywhere on ready screen
+    const touchStartArea = document.querySelector('.touch-start-area')
+    if (touchStartArea) {
+      touchStartArea.addEventListener('click', startGame)
+      touchStartArea.addEventListener('touchend', (e) => {
+        e.preventDefault()
+        startGame()
+      })
     }
 
     // Button click
