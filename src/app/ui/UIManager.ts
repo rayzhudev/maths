@@ -3,7 +3,6 @@ import { ChallengeManager } from '../challenges/ChallengeManager'
 import { ProgressTracker } from '../core/ProgressTracker'
 import { AudioManager } from '../core/AudioManager'
 import type { GameState, MathQuestion } from '../core/GameStateManager'
-import type { ChallengeType } from '../challenges/ChallengeManager'
 
 export class UIManager {
   private currentScreen: 'home' | 'game' | 'results' | 'settings' | 'achievements' = 'home'
@@ -294,10 +293,6 @@ export class UIManager {
             <span class="stat-label">Streak:</span>
             <span id="current-streak" class="stat-value">0</span>
           </div>
-          <div class="stat-item">
-            <span class="stat-label">Score:</span>
-            <span id="current-score" class="stat-value">0</span>
-          </div>
         </div>
         
         <div class="question-area">
@@ -351,12 +346,9 @@ export class UIManager {
     }
   }
 
-
-
   private updateGameUI(): void {
     const state = this.gameState.getState()
     
-    document.getElementById('current-score')!.textContent = state.score.toString()
     document.getElementById('current-streak')!.textContent = state.streak.toString()
     document.getElementById('correct-count')!.textContent = state.correctAnswers.toString()
     document.getElementById('incorrect-count')!.textContent = state.incorrectAnswers.toString()
@@ -479,6 +471,10 @@ export class UIManager {
     const mainContent = document.getElementById('main-content')!
     const state = this.gameState.getState()
     
+    // Store the current challenge and difficulty for play again
+    const currentChallenge = state.currentChallenge
+    const currentLevel = state.currentLevel
+    
     const accuracy = state.totalQuestions > 0 ? Math.round((state.correctAnswers / state.totalQuestions) * 100) : 0
     const avgTimePerQuestion = state.totalQuestions > 0 ? (this.totalAnswerTime / state.totalQuestions / 1000).toFixed(1) : '0.0'
     const challengeName = this.challengeManager.getChallenges()
@@ -501,16 +497,8 @@ export class UIManager {
             <div class="result-label">Incorrect Answers</div>
           </div>
           <div class="result-card">
-            <div class="result-value">${state.totalQuestions}</div>
-            <div class="result-label">Total Questions</div>
-          </div>
-          <div class="result-card">
             <div class="result-value">${accuracy}%</div>
             <div class="result-label">Accuracy</div>
-          </div>
-          <div class="result-card">
-            <div class="result-value">${state.score}</div>
-            <div class="result-label">Final Score</div>
           </div>
           <div class="result-card">
             <div class="result-value">${state.streak}</div>
@@ -524,7 +512,6 @@ export class UIManager {
         
         <div class="results-actions">
           <button id="play-again-btn" class="primary-btn">Play Again</button>
-          <button id="home-btn" class="secondary-btn">Home</button>
         </div>
         
         <div class="keyboard-hint">
@@ -534,17 +521,14 @@ export class UIManager {
     `
     
     const playAgain = () => {
-      const currentChallenge = state.currentChallenge
+      // Use stored challenge info instead of current state
       if (currentChallenge) {
-        this.startChallenge(currentChallenge, this.currentDifficulty)
+        this.startChallenge(currentChallenge, currentLevel || this.currentDifficulty)
       }
     }
     
+    // Set up Play Again button click handler
     document.getElementById('play-again-btn')?.addEventListener('click', playAgain)
-    
-    document.getElementById('home-btn')?.addEventListener('click', () => {
-      this.showHomeScreen()
-    })
     
     // Add keyboard listeners for results screen
     this.resultsKeyListener = (e: KeyboardEvent) => {

@@ -1,7 +1,6 @@
 export interface GameState {
   currentChallenge: string | null
   currentLevel: 'beginner' | 'intermediate' | 'advanced'
-  score: number
   streak: number
   sessionTimeLeft: number
   isPaused: boolean
