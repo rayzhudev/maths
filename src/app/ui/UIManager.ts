@@ -61,7 +61,7 @@ export class UIManager {
               <span></span>
               <span></span>
             </button>
-            <h1 class="mobile-title">Math Practice</h1>
+            <h1 class="mobile-title">Math</h1>
           </div>
         ` : ''}
         
