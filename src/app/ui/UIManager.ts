@@ -10,7 +10,7 @@ export class UIManager {
   private currentQuestionId: string | null = null
   private resultsKeyListener: ((e: KeyboardEvent) => void) | null = null
   private homeKeyListener: ((e: KeyboardEvent) => void) | null = null
-  private restartReady = false;
+  private restartReady = false
   private questionStartTime: number = 0
   private totalAnswerTime: number = 60000 // Fixed 60-second challenge duration
   private lastFeedbackContent: string = ''
@@ -470,11 +470,14 @@ export class UIManager {
   private displayQuestion(question: MathQuestion): void {
     // Use cached elements for better performance
     if (this.cachedElements.questionText) {
-      this.cachedElements.questionText.innerHTML = `
-        <div class="question-display">
-          <h3>${question.question}</h3>
-        </div>
-      `
+      const questionDisplay = document.createElement('div')
+      const questionHeading = document.createElement('h3')
+
+      questionDisplay.className = 'question-display'
+      questionHeading.textContent = question.question
+      questionDisplay.appendChild(questionHeading)
+
+      this.cachedElements.questionText.replaceChildren(questionDisplay)
     }
     
     if (this.cachedElements.answerInput) {
@@ -518,18 +521,21 @@ export class UIManager {
   private showBriefFeedback(question: string | undefined, isCorrect: boolean, correctAnswer?: number, answer?: string): void {
     // Clean up question by removing "= ?" from the end
     const cleanQuestion = question?.replace(/\s*=\s*\??\s*$/, '') || 'Unknown question'
+    const displayedAnswer = this.escapeHtml(answer || 'No answer')
+    const displayedCorrectAnswer = this.escapeHtml(String(correctAnswer ?? ''))
+    const displayedQuestion = this.escapeHtml(cleanQuestion)
     
     const feedbackHTML = isCorrect ? `
         <div class="brief-feedback correct">
           <span class="feedback-icon">✅</span>
-          <span class="feedback-text">${correctAnswer}</span>
+          <span class="feedback-text">${displayedCorrectAnswer}</span>
         </div>
       ` : `
         <div class="brief-feedback incorrect">
           <span class="feedback-icon">❌</span>
-          <span class="feedback-text">${answer || 'No answer'}</span>
+          <span class="feedback-text">${displayedAnswer}</span>
           <span class="feedback-icon">☑️</span>
-          <span class="feedback-text">${cleanQuestion} = ${correctAnswer}</span>
+          <span class="feedback-text">${displayedQuestion} = ${displayedCorrectAnswer}</span>
         </div>
       `
     
@@ -694,10 +700,10 @@ export class UIManager {
         <div class="achievements-grid">
           ${progress.achievements.map(achievement => `
             <div class="achievement-card unlocked">
-              <div class="achievement-icon">${achievement.icon}</div>
+              <div class="achievement-icon">${this.escapeHtml(achievement.icon)}</div>
               <div class="achievement-info">
-                <h3 class="achievement-name">${achievement.name}</h3>
-                <p class="achievement-description">${achievement.description}</p>
+                <h3 class="achievement-name">${this.escapeHtml(achievement.name)}</h3>
+                <p class="achievement-description">${this.escapeHtml(achievement.description)}</p>
                 <div class="achievement-date">Unlocked: ${achievement.unlockedAt.toLocaleDateString()}</div>
               </div>
             </div>
@@ -742,8 +748,8 @@ export class UIManager {
         <div class="recent-achievements-list">
           ${recent.map(achievement => `
             <div class="recent-achievement">
-              <span class="achievement-icon">${achievement.icon}</span>
-              <span class="achievement-name">${achievement.name}</span>
+              <span class="achievement-icon">${this.escapeHtml(achievement.icon)}</span>
+              <span class="achievement-name">${this.escapeHtml(achievement.name)}</span>
             </div>
           `).join('')}
         </div>
@@ -835,6 +841,10 @@ export class UIManager {
 
   handleEscape(): void {
     if (this.currentScreen === 'game') {
+      if (this.gameState.getState().isActive) {
+        this.challengeManager.endCurrentChallenge()
+      }
+
       this.showHomeScreen()
     } else if (this.currentScreen !== 'home') {
       this.showHomeScreen()
@@ -865,4 +875,13 @@ export class UIManager {
       }, 300)
     }, 3000)
   }
-} 
+
+  private escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;')
+  }
+}

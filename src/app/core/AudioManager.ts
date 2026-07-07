@@ -6,21 +6,41 @@ export class AudioManager {
 
   async init(): Promise<void> {
     try {
-      // Create audio context on user interaction
       this.setupAudioContext()
-      this.loadDefaultSounds()
     } catch (error) {
       console.warn('Audio initialization failed:', error)
     }
   }
 
   private setupAudioContext(): void {
-    // Audio context will be created on first user interaction
-    document.addEventListener('click', () => {
-      if (!this.audioContext) {
-        this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const initializeAudio = () => {
+      if (this.audioContext) {
+        if (this.audioContext.state === 'suspended') {
+          this.audioContext.resume().catch(error => {
+            console.warn('Failed to resume audio context:', error)
+          })
+        }
+
+        if (this.sounds.size === 0) {
+          this.loadDefaultSounds()
+        }
+
+        return
       }
-    }, { once: true })
+
+      const AudioContextClass = window.AudioContext ||
+        (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+
+      if (!AudioContextClass) {
+        return
+      }
+
+      this.audioContext = new AudioContextClass()
+      this.loadDefaultSounds()
+    }
+
+    document.addEventListener('pointerdown', initializeAudio, { once: true })
+    document.addEventListener('keydown', initializeAudio, { once: true })
   }
 
   private loadDefaultSounds(): void {
@@ -69,6 +89,12 @@ export class AudioManager {
     }
 
     try {
+      if (this.audioContext.state === 'suspended') {
+        this.audioContext.resume().catch(error => {
+          console.warn('Failed to resume audio context:', error)
+        })
+      }
+
       const buffer = this.sounds.get(soundName)!
       const source = this.audioContext.createBufferSource()
       const gainNode = this.audioContext.createGain()
@@ -116,4 +142,4 @@ export class AudioManager {
   getVolume(): number {
     return this.volume
   }
-} 
+}

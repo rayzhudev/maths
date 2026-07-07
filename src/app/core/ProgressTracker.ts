@@ -45,7 +45,7 @@ export class ProgressTracker {
         this.progress = {
           ...data,
           challengeStats: new Map(data.challengeStats || []),
-          achievements: data.achievements || [],
+          achievements: this.hydrateAchievements(data.achievements),
           lastPlayed: new Date(data.lastPlayed || Date.now())
         }
       }
@@ -211,8 +211,25 @@ export class ProgressTracker {
     }
   }
 
+  private hydrateAchievements(achievements: unknown): Achievement[] {
+    if (!Array.isArray(achievements)) {
+      return []
+    }
+
+    return achievements.map(achievement => {
+      const storedAchievement = achievement as Omit<Achievement, 'unlockedAt'> & {
+        unlockedAt?: string | Date
+      }
+
+      return {
+        ...storedAchievement,
+        unlockedAt: new Date(storedAchievement.unlockedAt || Date.now())
+      }
+    })
+  }
+
   reset(): void {
     this.progress = this.getDefaultProgress()
     localStorage.removeItem(this.storageKey)
   }
-} 
+}
